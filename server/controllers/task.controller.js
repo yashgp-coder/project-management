@@ -1,4 +1,3 @@
-import e from "express";
 import { inngest } from "../inngest/index.js";
 
 // Create Task
@@ -11,13 +10,13 @@ export const createTask = async (req, res) => {
         // Check if the user is admin role in the project
         const project = await prisma.project.findUnique({
             where: { id: projectId },
-            include: {member: {include: {user: true}}}
+            include: {members: {include: {user: true}}}
         })
         if(!project) {
             return res.status(404).json({ message: 'Project not found' });
         }else if(project.team_lead !== userId){
             return res.status(403).json({ message: 'Only team lead can create task' });
-        }else if (assigneeId && !project.member.find((member)=> member.user.id === assigneeId)) {
+        }else if (assigneeId && !project.members.find((member)=> member.user.id === assigneeId)) {
             return res.status(400).json({ message: 'Assignee must be a member of the project' });
         }
 
@@ -29,6 +28,7 @@ export const createTask = async (req, res) => {
                 status,
                 priority,
                 assigneeId,
+                type,
                 due_date: new Date(due_date),
             }
         })
