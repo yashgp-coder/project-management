@@ -143,10 +143,11 @@ const sendTaskAssignmentEmail = inngest.createFunction(
             },
             include: {assignee: true, project: true},
         })
-        if (!task || !task.assignee) {
-    console.log("No assignee found. Skipping email.");
-    return;
-}
+        if (!task || !task.assignee || !task.assignee.email) {
+            console.log("No assignee email found. Skipping email.");
+            return;
+            }
+
         await sendEmail({
             to: task.assignee.email,
             subject: `New Task Assignment in ${task.project.name}`,
@@ -179,6 +180,7 @@ const sendTaskAssignmentEmail = inngest.createFunction(
         })
         if(new Date(task.due_date).toLocaleDateString() !== new Date().toDateString()){
             await step.sleepUntil('wait-for-the-due-date',new Date(task.due_date));
+            
             await step.run('check-if-task-is-completed',async()=>{
                 const task = await prisma.task.findUnique({
                     where: {
