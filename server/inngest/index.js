@@ -122,9 +122,11 @@ const syncWorkspaceMemberCreation = inngest.createFunction(
     async ({ event}) => {
         const { data } = event;
         await prisma.workspaceMember.create({
-            userId: data.user_id,
-            workspaceId: data.organization_id,
-            role: String(data.role_name).toUpperCase(),
+            data: {
+                userId: data.user_id,
+                workspaceId: data.organization_id,
+                role: String(data.role_name).toUpperCase(),
+            }
         })
     }
 )
