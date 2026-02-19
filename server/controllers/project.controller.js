@@ -34,9 +34,10 @@ export const createProject = async (req, res) => {
                 description,
                 status,
                 priority,
+                progress,
+                team_lead: teamLead?.id,
                 start_date: start_date? new Date(start_date) : null,
                 end_date: end_date? new Date(end_date) : null,
-                teamLeadId: teamLead?.id,
             }
         })
 
@@ -61,7 +62,7 @@ export const createProject = async (req, res) => {
             where: { id: project.id },
             include: {
                 members: {include: {user: true}},
-                tasks: {include: {assignees: {include: {user: true}}}},
+                tasks: {include: {assignee: true,comments: {include :{user:true}}}},
                 owner: true
             }
         })
