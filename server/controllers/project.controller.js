@@ -94,7 +94,7 @@ export const updateProject = async (req, res) => {
             })
             if(!project) {
                 return res.status(404).json({ message: "Project not found" });
-            }else if(project.teamLeadId !== userId) {
+            }else if(project.team_lead !== userId) {
                 return res.status(403).json({ message: "You do not have permission to update this project" });
             }
         }
