@@ -143,6 +143,10 @@ const sendTaskAssignmentEmail = inngest.createFunction(
             },
             include: {assignee: true, project: true},
         })
+        if (!task || !task.assignee) {
+    console.log("No assignee found. Skipping email.");
+    return;
+}
         await sendEmail({
             to: task.assignee.email,
             subject: `New Task Assignment in ${task.project.name}`,
